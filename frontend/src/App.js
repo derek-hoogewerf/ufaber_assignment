@@ -102,6 +102,9 @@ class App extends Component {
             </div>
           </div>
         </div>
+        <footer className="my-5 mb-2 bg-info text-white text-center">
+          &copy; 2021
+        </footer>
       </main>
     )
   }
