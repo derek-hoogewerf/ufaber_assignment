@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { Modal } from 'reactstrap';
 import './App.css';
 import CustomModal from './components/Modal'
 
@@ -102,8 +103,13 @@ class App extends Component {
             </div>
           </div>
         </div>
-        <footer className="my-5 mb-2 bg-info text-white text-center">
+        <footer className="my-2 mb-2 bg-info text-white text-center">
           &copy; 2021
+          { this.state.modal ? (
+            <Modal activeItem={ this.state.activeItem} toggle={this.toggle}
+            onSave={ this.handleSubmit }/>
+           ): null
+          }
         </footer>
       </main>
     )
