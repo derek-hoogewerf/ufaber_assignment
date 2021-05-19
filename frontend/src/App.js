@@ -87,9 +87,9 @@ class App extends Component {
 
   render() {
     return (
-      <main className="context">
+      <main className="context mb-2 p-3 bg-info">
         <h1 className="text-black text-uppercase my-5"> Project Manager </h1>
-        <h3 className="row">
+        <div className="row">
           <div className="col-md-5 col-sma-10 mx-auto p-0">
             <div className="card p-3">
               <div>
@@ -101,7 +101,7 @@ class App extends Component {
               </ul>
             </div>
           </div>
-        </h3>
+        </div>
       </main>
     )
   }
