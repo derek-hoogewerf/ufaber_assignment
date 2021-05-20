@@ -1,7 +1,8 @@
+import axios from 'axios';
 import React, {Component} from 'react'
 import { Modal } from 'reactstrap';
 import './App.css';
-import CustomModal from './components/Modal'
+import CustomModal from './components/Modal';
 
 class App extends Component {
   constructor(props) {
@@ -13,30 +14,53 @@ class App extends Component {
         description: "",
         completed: false
       },
-      taskList: tasks
+      todoList: []
     };
+  }
+
+  componentDidMount() {
+    this.refreshList();
+  }
+
+  refreshList = () => {
+    axios
+    .get('http://localhost:8000/api/tasks')
+    .then(res => this.state({ todoList: res.data }))
+    .catch(err => console.log(err))
   }
 
 // toggle property
   toggle = () => {
     this.setState({ modal: !this.state.modal });
   };
+
   handleSubmit = item => {
     this.toggle();
-    alert('Saved' + JSON.stringify(item));
-  }
+    if(item.id) {
+      axios
+      .put(`http://localhost:8000/api/tasks/${item.id}`, item)
+      .then(res => this.refreshList())
+    }
+    // alert('Saved' + JSON.stringify(item));
+    axios.post("http://localhost:8000/api/tasks", item)
+      .then(res => this.refreshList())
+  };
+
   handleDelete = item => {
-    alert('Deleted' + JSON.stringify(item));
-  }
+    // alert('Deleted' + JSON.stringify(item));
+    axios
+    .delete(`http://localhost:8000/api/tasks/${item.id}`)
+    .then(res => this.refreshList())
+  };
 
   createItem = () => {
     const item = { title: "", modal: !this.state.modal };
     this.setState({ activeItem: item, modal: !this.state.modal});
-  }
+  };
 
-  editItem = () => {
+  editItem = item => {
     this.setState({ activeItem: item, modal: !this.state.modal});
-  }
+  };
 
   displayCompleted = status => {
     if(status){
@@ -45,7 +69,7 @@ class App extends Component {
     else {
       return this.setState({viewCompleted: false});
     }
-  }
+  };
 
   renderTabList = () => {
     return (
@@ -69,7 +93,7 @@ class App extends Component {
   // Rendering completed or imcomplete items
   renderItems = () => {
     const { viewCompleted } = this.state;
-    const newItems = this.state.taskList.filter(
+    const newItems = this.state.todoList.filter(
       item => item.completed == viewCompleted
     );
 

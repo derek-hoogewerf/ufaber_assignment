@@ -56,7 +56,7 @@ class CustomModal extends Component {
                             onChange={this.handleChange}
                             placeholder="Enter project description" />
                         </FormGroup>
-                        {/*  */}
+                        {/* completed or not boolean */}
                         <FormGroup check>
                             <label for="completed"> Completed </label>
                             <input 
@@ -68,9 +68,9 @@ class CustomModal extends Component {
                     </Form>
                 </ModalBody>
                 <ModalFooter>
-                    <button color="success" onClick={() => onSave(this.state.activeItem)}>
+                    <Button color="success" onClick={() => onSave(this.state.activeItem)}>
                         Save
-                    </button>
+                    </Button>
                 </ModalFooter>
             </Modal>        
         )
