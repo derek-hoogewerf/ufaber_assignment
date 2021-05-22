@@ -102,15 +102,15 @@ class App extends Component {
       </li>
     ));
   };
-  // ///////////////////////////////////////////////////////////
+  // 
 
-  ////add this after modal creation
-  toggle = () => {//add this after modal creation
-    this.setState({ modal: !this.state.modal });//add this after modal creation
+  toggle = () => {
+    this.setState({ modal: !this.state.modal });
   };
-  // handleSubmit = item => {//add this after modal creation
-  //   this.toggle();//add this after modal creation
-  //   alert("save" + JSON.stringify(item));//add this after modal creation
+
+  // handleSubmit = item => {
+  //   this.toggle();
+  //   alert("save" + JSON.stringify(item));
   // };
 
   // Submit an item
@@ -161,7 +161,7 @@ class App extends Component {
             <div className="card p-3">
               <div className="">
                 <button onClick={this.createItem} className="btn btn-primary">
-                  Add Project
+                  Add Task
                     </button>
               </div>
               {this.renderTabList()}
