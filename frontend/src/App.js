@@ -79,10 +79,10 @@ class App extends Component {
           {item.name}
         </span>
         <span>
-            start_date={item.start_date}
+            Starts = {item.start_date}
         </span>
         <span>
-          end_date={item.end_date}
+          Ends = {item.end_date}
         </span>
         <span>
           <button
