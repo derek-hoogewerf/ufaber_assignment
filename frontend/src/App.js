@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, {Component} from 'react'
-import { Modal } from 'reactstrap';
+// import { Modal } from 'reactstrap';
 import './App.css';
-import CustomModal from './components/Modal';
+import Modal from './components/Modal';
 
 class App extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class App extends Component {
         description: "",
         completed: false
       },
-      todoList: []
+      taskList: []
     };
   }
 
@@ -22,54 +22,23 @@ class App extends Component {
     this.refreshList();
   }
 
+  // FIN TUTO
+  // The refreshList() function is reusable that is called each time an API request is completed. It updates the Todo list to display the most recent list of added items.
   refreshList = () => {
-    axios
-    .get('http://localhost:8000/api/tasks')
-    .then(res => this.state({ todoList: res.data }))
-    .catch(err => console.log(err))
-  }
-
-// toggle property
-  toggle = () => {
-    this.setState({ modal: !this.state.modal });
+    axios   //add axios to make the get request
+      .get("http://localhost:8000/api/tasks/")
+      .then(res => this.setState({ taskList: res.data }))
+      .catch(err => console.log(err));
   };
 
-  handleSubmit = item => {
-    this.toggle();
-    if(item.id) {
-      axios
-      .put(`http://localhost:8000/api/tasks/${item.id}`, item)
-      .then(res => this.refreshList())
-    }
-    // alert('Saved' + JSON.stringify(item));
-    axios.post("http://localhost:8000/api/tasks", item)
-      .then(res => this.refreshList())
-  };
-
-  handleDelete = item => {
-    // alert('Deleted' + JSON.stringify(item));
-    axios
-    .delete(`http://localhost:8000/api/tasks/${item.id}`)
-    .then(res => this.refreshList())
-  };
-
-  createItem = () => {
-    const item = { title: "", modal: !this.state.modal };
-    this.setState({ activeItem: item, modal: !this.state.modal});
-  };
-
-  editItem = item => {
-    this.setState({ activeItem: item, modal: !this.state.modal});
-  };
 
   displayCompleted = status => {
-    if(status){
-      return this.setState({viewCompleted: true});
-    }  
-    else {
-      return this.setState({viewCompleted: false});
+    if (status) {
+      return this.setState({ viewCompleted: true });
     }
+    return this.setState({ viewCompleted: false });
   };
+
 
   renderTabList = () => {
     return (
@@ -78,47 +47,114 @@ class App extends Component {
           onClick={() => this.displayCompleted(true)}
           className={this.state.viewCompleted ? "active" : ""}
         >
-          Completed
-        </span>
+          completed
+            </span>
         <span
-          onClick={()=> this.displayCompleted(false)}
+          onClick={() => this.displayCompleted(false)}
           className={this.state.viewCompleted ? "" : "active"}
-          >
-            Incomplete
-          </span>
+        >
+          Incompleted
+            </span>
       </div>
-    )
-  }
+    );
+  };
 
-  // Rendering completed or imcomplete items
+  // Main variable to render items on the screen
   renderItems = () => {
     const { viewCompleted } = this.state;
-    const newItems = this.state.todoList.filter(
-      item => item.completed == viewCompleted
+    const newItems = this.state.taskList.filter(
+      item => item.completed === viewCompleted
     );
-
     return newItems.map(item => (
-      <li key={item.id} className="list-group-item d-flex justify-content-between align-items-center">
-        <span className={`todo-title mr-2 ${this.state.viewCompleted ? "completed-todo" : ""}`} title={item.name}>
-          {item.name}
+      <li
+        key={item.id}
+        className="list-group-item d-flex justify-content-between align-items-center"
+      >
+        <span
+          className={`todo-title mr-2 ${this.state.viewCompleted ? "completed-todo" : ""
+            }`}
+          title={item.description}
+        >
+          {item.title}
         </span>
         <span>
-          <button className="btn btn-info mr-2"> Edit </button> 
-          <button className="btn btn-danger mr-2"> Delete </button>
+          <button
+            onClick={() => this.editItem(item)}
+            className="btn btn-secondary mr-2"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => this.handleDelete(item)}
+            className="btn btn-danger"
+          >
+            Delete
+          </button>
         </span>
       </li>
-    ))
-  }
+    ));
+  };
+  // ///////////////////////////////////////////////////////////
 
+  ////add this after modal creation
+  toggle = () => {//add this after modal creation
+    this.setState({ modal: !this.state.modal });//add this after modal creation
+  };
+  // handleSubmit = item => {//add this after modal creation
+  //   this.toggle();//add this after modal creation
+  //   alert("save" + JSON.stringify(item));//add this after modal creation
+  // };
+
+  // Submit an item
+  handleSubmit = item => {
+    this.toggle();
+    if (item.id) {
+      // if old post to edit and submit
+      axios
+        .put(`http://localhost:8000/api/tasks/${item.id}/`, item)
+        .then(res => this.refreshList());
+      return;
+    }
+    // if new post to submit
+    axios
+      .post("http://localhost:8000/api/tasks/", item)
+      .then(res => this.refreshList());
+  };
+
+  // Delete item
+  handleDelete = item => {
+    axios
+      .delete(`http://localhost:8000/api/tasks/${item.id}/`)
+      .then(res => this.refreshList());
+  };
+  // handleDelete = item => {//add this after modal creation
+  //   alert("delete" + JSON.stringify(item));//add this after modal creation
+  // };
+
+  // Create item
+  createItem = () => {
+    const item = { title: "", description: "", completed: false };
+    this.setState({ activeItem: item, modal: !this.state.modal });
+  };
+
+  //Edit item
+  editItem = item => {
+    this.setState({ activeItem: item, modal: !this.state.modal });
+  };
+
+
+  // -I- Start by this for visual effects to viewer
   render() {
     return (
-      <main className="context mb-2 p-3 bg-info">
-        <h1 className="text-black text-uppercase my-5"> Project Manager </h1>
-        <div className="row">
-          <div className="col-md-5 col-sma-10 mx-auto p-0">
+      <main className="content">
+        <h1 className="text-black text-uppercase text-center my-4">Task Manager</h1>
+        <div className="row ">
+          <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">
-              <div>
-                <button  className="btn btn-primary"> Add Project </button>
+              <div className="">
+                <button onClick={this.createItem} className="btn btn-primary">
+                  Add Project
+                    </button>
               </div>
               {this.renderTabList()}
               <ul className="list-group list-group-flush">
@@ -127,17 +163,15 @@ class App extends Component {
             </div>
           </div>
         </div>
-        <footer className="my-2 mb-2 bg-info text-white text-center">
-          &copy; 2021
-          { this.state.modal ? (
-            <Modal activeItem={ this.state.activeItem} toggle={this.toggle}
-            onSave={ this.handleSubmit }/>
-           ): null
-          }
-        </footer>
+        {this.state.modal ? (
+          <Modal
+            activeItem={this.state.activeItem}
+            toggle={this.toggle}
+            onSave={this.handleSubmit}
+          />
+        ) : null}
       </main>
-    )
+    );
   }
 }
-
 export default App;
