@@ -10,8 +10,10 @@ class App extends Component {
     this.state = {
       viewCompleted: false,
       activeItem: {
-        title: "",
+        name: "",
         description: "",
+        start_date: "0000-00-00",
+        end_date: "0000-00-00",
         completed: false
       },
       taskList: []
@@ -22,7 +24,6 @@ class App extends Component {
     this.refreshList();
   }
 
-  // FIN TUTO
   // The refreshList() function is reusable that is called each time an API request is completed. It updates the Todo list to display the most recent list of added items.
   refreshList = () => {
     axios   //add axios to make the get request
@@ -47,7 +48,7 @@ class App extends Component {
           onClick={() => this.displayCompleted(true)}
           className={this.state.viewCompleted ? "active" : ""}
         >
-          completed
+          Completed
             </span>
         <span
           onClick={() => this.displayCompleted(false)}
@@ -59,7 +60,7 @@ class App extends Component {
     );
   };
 
-  // Main variable to render items on the screen
+  // to render items on the screen
   renderItems = () => {
     const { viewCompleted } = this.state;
     const newItems = this.state.taskList.filter(
@@ -75,7 +76,13 @@ class App extends Component {
             }`}
           title={item.description}
         >
-          {item.title}
+          {item.name}
+        </span>
+        <span>
+            start_date={item.start_date}
+        </span>
+        <span>
+          end_date={item.end_date}
         </span>
         <span>
           <button
@@ -127,13 +134,13 @@ class App extends Component {
       .delete(`http://localhost:8000/api/tasks/${item.id}/`)
       .then(res => this.refreshList());
   };
-  // handleDelete = item => {//add this after modal creation
-  //   alert("delete" + JSON.stringify(item));//add this after modal creation
+  // handleDelete = item => {
+  //   alert("delete" + JSON.stringify(item));
   // };
 
   // Create item
   createItem = () => {
-    const item = { title: "", description: "", completed: false };
+    const item = { name: "", description: "", completed: false };
     this.setState({ activeItem: item, modal: !this.state.modal });
   };
 
