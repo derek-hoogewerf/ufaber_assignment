@@ -83,6 +83,7 @@ class App extends Component {
         </span>
         <span>
           Ends = {item.end_date}
+
         </span>
         <span>
           <button
